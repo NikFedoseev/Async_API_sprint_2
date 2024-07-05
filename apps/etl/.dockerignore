@@ -1,0 +1,4 @@
+Readme.md
+.dockerignore
+__pycache__
+dump.sql

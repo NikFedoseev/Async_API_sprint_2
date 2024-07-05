@@ -1,0 +1,36 @@
+line-length = 120
+target-version = "py312"
+
+[format]
+quote-style = "double"
+
+
+[lint]
+select = [
+    # https://docs.astral.sh/ruff/rules/
+    # pycodestyle
+    "E",
+    "W",
+    # to check McCabe complexity.
+    "C",
+    # quotes
+    "Q",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # pytest
+    "PT",
+    # pep8-naming (N)
+    "N"
+]
+
+
+[lint.flake8-quotes]
+inline-quotes = "double"
