@@ -1,11 +1,12 @@
 from contextlib import asynccontextmanager
 
-from api import api_router_v1
-from db import elastic, redis
 from elasticsearch import AsyncElasticsearch
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from redis.asyncio import Redis
+
+from api import api_router_v1
+from db import elastic, redis
 from settings.api import api_settings
 from settings.elastic import elastic_settings
 from settings.redis import redis_settings

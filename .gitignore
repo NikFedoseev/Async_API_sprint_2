@@ -22,7 +22,7 @@ __pycache__/
 .venv
 
 # db files
-dbs
+/dbs
 .python-version
 .mypy_cache
 .ruff_cache
