@@ -3,7 +3,6 @@ name = "practicum-tests"
 version = "0.1.0"
 description = ""
 authors = ["a.v.cherkashin <a.v.cherkashin@tinkoff.ru>"]
-readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]

@@ -6,8 +6,13 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
 RUN apt update && pip install --upgrade pip
-COPY /requirements/base.txt requirements.txt
-RUN pip install -r requirements.txt
+COPY pyproject.toml poetry.lock /opt/app/
+
+RUN pip install --no-compile --upgrade pip \
+ && pip install --no-compile poetry \
+ && poetry config virtualenvs.create false \
+ && poetry install --no-interaction --no-ansi
+
 
 COPY . .
 
