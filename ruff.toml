@@ -4,6 +4,8 @@ target-version = "py312"
 [format]
 quote-style = "double"
 
+[lint.per-file-ignores]
+"apps/movies/api/v1/endpoints/*" = ["B008"]
 
 [lint]
 select = [
@@ -34,3 +36,6 @@ select = [
 
 [lint.flake8-quotes]
 inline-quotes = "double"
+
+[lint.isort]
+known-first-party = ["db", "settings", "api", "models", "services", "core"]

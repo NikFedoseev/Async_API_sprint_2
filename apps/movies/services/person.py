@@ -3,8 +3,9 @@ from typing import Any
 from uuid import UUID
 
 from elasticsearch import AsyncElasticsearch, NotFoundError
-from models import Person, PersonFilm
 from redis.asyncio import Redis
+
+from models import Person, PersonFilm
 from services.base import BaseService
 from services.deps import ElasticClient, RedisClient
 

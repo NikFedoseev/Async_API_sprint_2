@@ -1,5 +1,6 @@
 from pydantic import RedisDsn, field_validator
 from pydantic_core.core_schema import FieldValidationInfo
+
 from settings.base import BaseSettings
 
 

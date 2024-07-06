@@ -2,9 +2,10 @@ from functools import lru_cache
 from uuid import UUID
 
 from elasticsearch import AsyncElasticsearch, NotFoundError
+from redis.asyncio import Redis
+
 from models import Film
 from models.genre import Genre
-from redis.asyncio import Redis
 from services.base import BaseService
 from services.deps import ElasticClient, RedisClient
 

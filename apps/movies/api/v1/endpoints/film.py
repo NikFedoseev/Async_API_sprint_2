@@ -1,8 +1,9 @@
 from uuid import UUID
 
-from api.deps import FilmService
+from fastapi import APIRouter, Depends, HTTPException, status
+
+from api.deps import FilmService, PaginateQueryParams
 from api.v1.schemas.film import DetailedFilmSchema, FilmSchema
-from fastapi import APIRouter, HTTPException, status
 
 router = APIRouter()
 
@@ -11,13 +12,12 @@ router = APIRouter()
 async def search_films(
     film_service: FilmService,
     title: str,
-    page_size: int = 20,
-    page_number: int = 1,
+    pagination: PaginateQueryParams = Depends(),
 ):
     """
     Поиск фильмов по названию
     """
-    films = await film_service.search(title=title, page_size=page_size, page_number=page_number)
+    films = await film_service.search(title=title, page_size=pagination.page_size, page_number=pagination.page_number)
     return films
 
 
@@ -39,11 +39,12 @@ async def get_films(
     film_service: FilmService,
     sort: str | None = None,
     genre: UUID | None = None,
-    page_size: int = 20,
-    page_number: int = 1,
+    pagination: PaginateQueryParams = Depends(),
 ):
     """
     Получить список фильмов для вывода на главную страницу
     """
-    films = await film_service.get_all(sort=sort, genre=str(genre), page_size=page_size, page_number=page_number)
+    films = await film_service.get_all(
+        sort=sort, genre=str(genre), page_size=pagination.page_size, page_number=pagination.page_number
+    )
     return films
