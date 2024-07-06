@@ -4,10 +4,11 @@ from enricher import PostgresEnricher
 from loader import ElasticsearchLoader
 from merger import PostgresMerger
 from producer import PostgresProducer
-from settings import settings
 from state import JsonFileStorage, State
 from transformer import Transformer
 from utils import get_postges_connection, logger
+
+from settings import settings
 
 
 def main():

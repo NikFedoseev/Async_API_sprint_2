@@ -23,6 +23,12 @@ cp ./app/.env.example ./app/.env
 ```
 * change variable values as needed
 
+### Run Local
+```bash
+docker compose -f ../../docker-compose.local.yml up -d --build
+./local_up.sh
+```
+
 ### Deploy
 * use shortcut script
 ```bash
