@@ -3,10 +3,12 @@ FROM python:3.12
 WORKDIR /opt/app
 
 
-COPY requirements.txt requirements.txt
+COPY pyproject.toml poetry.lock /opt/app/
 
-RUN pip install --upgrade pip \
-    && pip install -r requirements.txt
+RUN pip install --no-compile --upgrade pip \
+ && pip install --no-compile poetry \
+ && poetry config virtualenvs.create false \
+ && poetry install --no-interaction --no-ansi
 
 COPY . .
 
