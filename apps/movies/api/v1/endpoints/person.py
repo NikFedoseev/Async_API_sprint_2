@@ -1,9 +1,10 @@
 from uuid import UUID
 
-from api.deps import PersonService
+from fastapi import APIRouter, Depends, HTTPException, status
+
+from api.deps import PaginateQueryParams, PersonService
 from api.v1.schemas.film import FilmSchema
 from api.v1.schemas.person import PersonSchema
-from fastapi import APIRouter, HTTPException, status
 
 router = APIRouter()
 
@@ -14,14 +15,13 @@ async def search(
     name: str | None = None,
     role: str | None = None,
     film_title: str | None = None,
-    page_size: int = 20,
-    page_number: int = 1,
+    pagination: PaginateQueryParams = Depends(),
 ):
     """
     Поиск персон по имени, роли и названию фильма
     """
 
-    return await person_service.search(page_size, page_number, name, role, film_title)
+    return await person_service.search(pagination.page_size, pagination.page_number, name, role, film_title)
 
 
 @router.get("/{person_id}", response_model=PersonSchema)
@@ -42,11 +42,10 @@ async def details(person_service: PersonService, person_id: UUID):
 async def films(
     person_service: PersonService,
     person_id: UUID,
-    page_size: int = 20,
-    page_number: int = 1,
+    pagination: PaginateQueryParams = Depends(),
 ):
     """
     Список фильмов персоны
     """
 
-    return await person_service.get_films(person_id, page_size, page_number)
+    return await person_service.get_films(person_id, pagination.page_size, pagination.page_number)

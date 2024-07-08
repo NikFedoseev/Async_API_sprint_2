@@ -41,7 +41,7 @@ class PersonService:
         if not person:
             return []
 
-        return person.films[(page_number - 1) * page_size : page_number * page_size]
+        return person.films[(page_number - 1) * page_size: page_number * page_size]
 
 
 @lru_cache(maxsize=1)

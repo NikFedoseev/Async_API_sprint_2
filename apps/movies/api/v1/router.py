@@ -1,7 +1,8 @@
+from fastapi import APIRouter
+
 from api.v1.endpoints.film import router as film_router
 from api.v1.endpoints.genre import router as genre_router
 from api.v1.endpoints.person import router as person_router
-from fastapi import APIRouter
 
 api_router = APIRouter(prefix="/api/v1")
 

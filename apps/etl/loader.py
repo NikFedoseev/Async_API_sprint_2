@@ -6,6 +6,7 @@ from indices.genre import genre_index_config
 from indices.movie import movie_index_config
 from indices.person import person_index_config
 from logger import logger
+
 from models import Genre, Movie, Person
 
 
