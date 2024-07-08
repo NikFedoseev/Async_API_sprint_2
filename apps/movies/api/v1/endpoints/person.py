@@ -8,7 +8,7 @@ from fastapi import APIRouter, HTTPException, status
 router = APIRouter()
 
 
-@router.get("/search")
+@router.get("/search", response_model=list[PersonSchema])
 async def search(
     person_service: PersonService,
     name: str | None = None,
@@ -16,7 +16,7 @@ async def search(
     film_title: str | None = None,
     page_size: int = 20,
     page_number: int = 1,
-) -> list[PersonSchema]:
+):
     """
     Поиск персон по имени, роли и названию фильма
     """
@@ -24,8 +24,8 @@ async def search(
     return await person_service.search(page_size, page_number, name, role, film_title)
 
 
-@router.get("/{person_id}")
-async def details(person_service: PersonService, person_id: UUID) -> PersonSchema:
+@router.get("/{person_id}", response_model=PersonSchema)
+async def details(person_service: PersonService, person_id: UUID):
     """
     Получить информацию о персоне по идентификатору
     """
@@ -38,13 +38,13 @@ async def details(person_service: PersonService, person_id: UUID) -> PersonSchem
     return person
 
 
-@router.get("/{person_id}/films")
+@router.get("/{person_id}/films", response_model=list[FilmSchema])
 async def films(
     person_service: PersonService,
     person_id: UUID,
     page_size: int = 20,
     page_number: int = 1,
-) -> list[FilmSchema]:
+):
     """
     Список фильмов персоны
     """

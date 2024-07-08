@@ -1,10 +1,12 @@
 from typing import Annotated
 
-from db.elastic import get_elastic
-from db.redis import get_redis
-from elasticsearch import AsyncElasticsearch
+from cache import RedisCache as _RedisCache
 from fastapi import Depends
-from redis.asyncio import Redis
+from storages.film import ElasticSearchFilmStorage as _ElasticSearchFilmStorage
+from storages.genre import ElasticSearchGenreStorage as _ElasticSearchGenreStorage
+from storages.person import ElasticPersonFilmStorage as _ElasticPersonFilmStorage
 
-ElasticClient = Annotated[AsyncElasticsearch, Depends(get_elastic)]
-RedisClient = Annotated[Redis, Depends(get_redis)]
+RedisCache = Annotated[_RedisCache, Depends(_RedisCache)]
+ElasticSearchFilmStorage = Annotated[_ElasticSearchFilmStorage, Depends(_ElasticSearchFilmStorage)]
+ElasticSearchGenreStorage = Annotated[_ElasticSearchGenreStorage, Depends(_ElasticSearchGenreStorage)]
+ElasticPersonFilmStorage = Annotated[_ElasticPersonFilmStorage, Depends(_ElasticPersonFilmStorage)]
