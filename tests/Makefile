@@ -1,3 +1,3 @@
 CODE = .
 
-include ../../Makefile
+include ../Makefile
