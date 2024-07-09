@@ -4,15 +4,27 @@ import aiohttp
 import pytest
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
-
+import time
 from settings import test_settings
 
 #  Название теста должно начинаться со слова `test_`
 #  Любой тест с асинхронными вызовами нужно оборачивать декоратором `pytest.mark.asyncio`, который следит за запуском и работой цикла событий.
 
-
+@pytest.mark.parametrize(
+    'query_data, expected_answer',
+    [
+        (
+                {'title': 'The Star'},
+                {'status': 200, 'length': 50}
+        ),
+        (
+                {'title': 'Mashed potato'},
+                {'status': 200, 'length': 0}
+        )
+    ]
+)
 @pytest.mark.asyncio()
-async def test_search():
+async def test_search(query_data, expected_answer):
     # 1. Генерируем данные для ES
     es_data = [
         {
@@ -57,10 +69,10 @@ async def test_search():
         raise Exception("Ошибка записи данных в Elasticsearch")
 
     # 3. Запрашиваем данные из ES по API
-
+    time.sleep(1)
     session = aiohttp.ClientSession()
     url = test_settings.service_url + "/api/v1/films/search"
-    query_data = {"title": "The Star"}
+    # query_data = {"title": "The Star"}
     async with session.get(url, params=query_data) as response:
         body = await response.json()
         headers = response.headers
@@ -69,5 +81,5 @@ async def test_search():
 
     # 4. Проверяем ответ
 
-    assert status == 200
-    assert len(body) == 50
+    assert status == expected_answer.get('status')
+    assert len(body) == expected_answer.get('length')
