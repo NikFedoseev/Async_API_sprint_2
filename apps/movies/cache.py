@@ -1,5 +1,5 @@
 import abc
-import json
+import orjson
 import pickle
 from collections.abc import Callable
 from typing import Annotated, Any
@@ -36,11 +36,10 @@ def cached_method(cache: Callable[[Any], Cache], expire: int):
     def decorator(func: Callable):
         def get_cache_key(*args, **kwargs):
             cache_key = func.__name__
-
             if args:
-                cache_key += json.dumps([*args])
+                cache_key += orjson.dumps(args).decode()
             if kwargs:
-                cache_key += json.dumps(kwargs)
+                cache_key += orjson.dumps(kwargs).decode()
 
             return cache_key
 
