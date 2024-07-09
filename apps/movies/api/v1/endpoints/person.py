@@ -9,14 +9,14 @@ from api.v1.schemas.person import PersonSchema
 router = APIRouter()
 
 
-@router.get("/search")
+@router.get("/search", response_model=list[PersonSchema])
 async def search(
     person_service: PersonService,
     name: str | None = None,
     role: str | None = None,
     film_title: str | None = None,
     pagination: PaginateQueryParams = Depends(),
-) -> list[PersonSchema]:
+):
     """
     Поиск персон по имени, роли и названию фильма
     """
@@ -24,8 +24,8 @@ async def search(
     return await person_service.search(pagination.page_size, pagination.page_number, name, role, film_title)
 
 
-@router.get("/{person_id}")
-async def details(person_service: PersonService, person_id: UUID) -> PersonSchema:
+@router.get("/{person_id}", response_model=PersonSchema)
+async def details(person_service: PersonService, person_id: UUID):
     """
     Получить информацию о персоне по идентификатору
     """
@@ -38,12 +38,12 @@ async def details(person_service: PersonService, person_id: UUID) -> PersonSchem
     return person
 
 
-@router.get("/{person_id}/films")
+@router.get("/{person_id}/films", response_model=list[FilmSchema])
 async def films(
     person_service: PersonService,
     person_id: UUID,
     pagination: PaginateQueryParams = Depends(),
-) -> list[FilmSchema]:
+):
     """
     Список фильмов персоны
     """

@@ -45,6 +45,6 @@ async def get_films(
     Получить список фильмов для вывода на главную страницу
     """
     films = await film_service.get_all(
-        sort=sort, genre=str(genre), page_size=pagination.page_size, page_number=pagination.page_number
+        sort=sort, genre_id=str(genre), page_size=pagination.page_size, page_number=pagination.page_number
     )
     return films
