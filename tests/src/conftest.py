@@ -1,5 +1,6 @@
 import asyncio
 
+import aiohttp
 import pytest_asyncio
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
@@ -21,6 +22,13 @@ async def es_client():
     await es_client.close()
 
 
+@pytest_asyncio.fixture(scope="session")
+async def http_client():
+    session = aiohttp.ClientSession()
+    yield session
+    await session.close()
+
+
 @pytest_asyncio.fixture()
 def es_write_data(es_client):
     async def inner(data: list[dict]):
@@ -32,5 +40,19 @@ def es_write_data(es_client):
 
         if errors:
             raise Exception("Ошибка записи данных в Elasticsearch")
+
+    return inner
+
+
+@pytest_asyncio.fixture()
+def make_get_request(http_client):
+    async def inner(method: str, query_data: dict):
+        session = aiohttp.ClientSession()
+        url = test_settings.service_url + method
+        async with session.get(url, params=query_data) as response:
+            body = await response.json()
+        await session.close()
+
+        return response
 
     return inner
