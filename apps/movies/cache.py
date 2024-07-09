@@ -20,7 +20,7 @@ class Cache(abc.ABC):
 
 
 class RedisCache(Cache):
-    def __init__(self, redis: Annotated[Redis, Depends(get_redis, use_cache=False)]) -> None:
+    def __init__(self, redis: Annotated[Redis, Depends(get_redis)]) -> None:
         self.redis = redis
 
     async def get(self, key: str):
