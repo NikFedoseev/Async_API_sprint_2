@@ -1,6 +1,6 @@
 import asyncio
 
-import aiohttp
+import httpx
 import pytest_asyncio
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
@@ -22,16 +22,9 @@ async def es_client():
     await es_client.close()
 
 
-@pytest_asyncio.fixture(scope="session")
-async def http_client():
-    session = aiohttp.ClientSession()
-    yield session
-    await session.close()
-
-
 @pytest_asyncio.fixture()
 def es_write_data(es_client):
-    async def inner(data: list[dict]):
+    async def inner(data: list[dict]) -> None:
         if await es_client.indices.exists(index=test_settings.es_index):
             await es_client.indices.delete(index=test_settings.es_index)
         await es_client.indices.create(index=test_settings.es_index, **test_settings.es_index_mapping)
@@ -45,14 +38,17 @@ def es_write_data(es_client):
 
 
 @pytest_asyncio.fixture()
-def make_get_request(http_client):
-    async def inner(method: str, query_data: dict):
-        session = aiohttp.ClientSession()
-        url = test_settings.service_url + method
-        async with session.get(url, params=query_data) as response:
-            body = await response.json()
-        await session.close()
+async def async_client():
+    async with httpx.AsyncClient() as client:
+        yield client
 
-        return response
+
+@pytest_asyncio.fixture()
+def make_get_request(async_client: httpx.AsyncClient):
+    async def inner(method: str, query_data: dict) -> httpx.Response:
+        url = test_settings.service_url + method
+        async_response = await async_client.get(url, params=query_data)
+
+        return async_response
 
     return inner

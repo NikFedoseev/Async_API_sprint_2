@@ -51,16 +51,6 @@ async def test_search(es_write_data, make_get_request, query_data, expected_answ
     time.sleep(1)
     response = await make_get_request("/api/v1/films/search", query_data)
 
-    # session = aiohttp.ClientSession()
-    # url = test_settings.service_url + "/api/v1/films/search"
-    # async with session.get(url, params=query_data) as response:
-    #     body = await response.json()
-    #     # headers = response.headers
-    #     status = response.status
-    # await session.close()
-
     # 4. Проверяем ответ
-    body = await response.json()
-
-    assert response.status == expected_answer.get("status")
-    assert len(body) == expected_answer.get("length")
+    assert response.status_code == expected_answer.get("status")
+    assert len(response.json()) == expected_answer.get("length")
