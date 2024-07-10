@@ -1,10 +1,13 @@
 services:
   tests:
-    image: fastapi-image
+    build:
+      context: .
+    env_file: .env
     entrypoint: >
-      sh -c "python3 /tests/functional/utils/wait_for_es.py
-      && python3 /tests/functional/utils/wait_for_redis.py
-      && pytest /tests/functional/src"
+      sh -c "python3 utils/wait_for_es.py
+      && python3 utils/wait_for_redis.py
+      && pytest src"
+
 
   movies:
     build:

@@ -23,6 +23,7 @@ __pycache__/
 
 # db files
 /dbs
+/tests/dbs
 .python-version
 .mypy_cache
 .ruff_cache
