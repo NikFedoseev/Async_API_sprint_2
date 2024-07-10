@@ -2,8 +2,10 @@ import time
 
 from elasticsearch import Elasticsearch
 
+from settings import test_settings
+
 if __name__ == "__main__":
-    es_client = Elasticsearch(hosts="http://localhost:9200", validate_cert=False, use_ssl=False)
+    es_client = Elasticsearch(hosts=test_settings.es.url)
     while True:
         if es_client.ping():
             break

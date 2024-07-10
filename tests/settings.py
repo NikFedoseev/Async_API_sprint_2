@@ -25,7 +25,7 @@ class ElasticSettings(MyBaseSettings):
 
 
 class RedisSettings(MyBaseSettings):
-    host: str = Field("http://127.0.0.1")
+    host: str = Field("127.0.0.1")
     port: int = Field(6380)
 
     class Config:
@@ -49,10 +49,10 @@ class ServiceSettings(MyBaseSettings):
 
 
 class TestSettings(BaseSettings):
-    es: ElasticSettings = ElasticSettings(...)
-    redis: RedisSettings = RedisSettings()
-    pg: PGSettings = PGSettings()
-    service: ServiceSettings = ServiceSettings()
+    es: ElasticSettings = ElasticSettings()  # type: ignore
+    redis: RedisSettings = RedisSettings()  # type: ignore
+    pg: PGSettings = PGSettings()  # type: ignore
+    service: ServiceSettings = ServiceSettings()  # type: ignore
 
 
 test_settings = TestSettings()

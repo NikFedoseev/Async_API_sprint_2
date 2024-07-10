@@ -21,7 +21,7 @@ local:
 plint:
 	ruff format $(CODE)
 	ruff check $(CODE) --fix --show-fixes
-	MYPYPATH=./apps/movies mypy --explicit-package-bases $(CODE)
+	MYPYPATH=./apps/movies mypy --ignore-missing-imports --explicit-package-bases $(CODE)
 
 
 .DEFAULT_GOAL := up
