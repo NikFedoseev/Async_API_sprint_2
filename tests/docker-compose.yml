@@ -3,6 +3,8 @@ services:
     build:
       context: .
     env_file: .env
+    depends_on:
+      - movies
     entrypoint: >
       sh -c "python3 utils/wait_for_es.py
       && python3 utils/wait_for_redis.py

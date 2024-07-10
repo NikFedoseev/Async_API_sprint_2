@@ -1,7 +1,7 @@
 from enum import StrEnum
 
 from pydantic import Field
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class ESIndex(StrEnum):
@@ -20,8 +20,7 @@ class ElasticSettings(MyBaseSettings):
     host: str = Field("http://127.0.0.1")
     port: int = Field(9201)
 
-    class Config:
-        env_prefix = "ELASTIC_"
+    model_config = SettingsConfigDict(env_prefix="ELASTIC_")
 
 
 class RedisSettings(MyBaseSettings):
@@ -29,16 +28,14 @@ class RedisSettings(MyBaseSettings):
     port: int = Field(6380)
     db: int = Field(0)
 
-    class Config:
-        env_prefix = "REDIS_"
+    model_config = SettingsConfigDict(env_prefix="REDIS_")
 
 
 class ServiceSettings(MyBaseSettings):
     host: str = Field("http://127.0.0.1")
     port: int = Field(8000)
 
-    class Config:
-        env_prefix = "SERVICE_"
+    model_config = SettingsConfigDict(env_prefix="SERVICE_")
 
 
 class TestSettings(BaseSettings):
