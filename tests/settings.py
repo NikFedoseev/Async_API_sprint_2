@@ -27,17 +27,10 @@ class ElasticSettings(MyBaseSettings):
 class RedisSettings(MyBaseSettings):
     host: str = Field("127.0.0.1")
     port: int = Field(6380)
+    db: int = Field(0)
 
     class Config:
         env_prefix = "REDIS_"
-
-
-class PGSettings(MyBaseSettings):
-    host: str = Field("127.0.0.1")
-    port: int = Field(5433)
-
-    class Config:
-        env_prefix = "PG_"
 
 
 class ServiceSettings(MyBaseSettings):
@@ -51,7 +44,6 @@ class ServiceSettings(MyBaseSettings):
 class TestSettings(BaseSettings):
     es: ElasticSettings = ElasticSettings()  # type: ignore
     redis: RedisSettings = RedisSettings()  # type: ignore
-    pg: PGSettings = PGSettings()  # type: ignore
     service: ServiceSettings = ServiceSettings()  # type: ignore
 
 

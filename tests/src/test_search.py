@@ -1,3 +1,4 @@
+import time
 import uuid
 
 import pytest
@@ -46,6 +47,7 @@ async def test_search(es_write_data, make_get_request, query_data, expected_answ
     await es_write_data(bulk_query)
 
     # 3. Запрашиваем данные из ES по API
+    time.sleep(1)
     response = await make_get_request("/api/v1/films/search", query_data)
 
     # 4. Проверяем ответ
