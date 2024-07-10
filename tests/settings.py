@@ -1,16 +1,58 @@
+from enum import StrEnum
+
 from pydantic import Field
 from pydantic_settings import BaseSettings
-from utils.mapping import movie_index_config
+
+
+class ESIndex(StrEnum):
+    movies = "movies"
+    genres = "genres"
+    persons = "persons"
+
+
+class MyBaseSettings(BaseSettings):
+    @property
+    def url(self) -> str:
+        return f"{self.host}:{self.port}"
+
+
+class ElasticSettings(MyBaseSettings):
+    host: str = Field("http://127.0.0.1")
+    port: int = Field(9201)
+
+    class Config:
+        env_prefix = "ELASTIC_"
+
+
+class RedisSettings(MyBaseSettings):
+    host: str = Field("http://127.0.0.1")
+    port: int = Field(6380)
+
+    class Config:
+        env_prefix = "REDIS_"
+
+
+class PGSettings(MyBaseSettings):
+    host: str = Field("127.0.0.1")
+    port: int = Field(5433)
+
+    class Config:
+        env_prefix = "PG_"
+
+
+class ServiceSettings(MyBaseSettings):
+    host: str = Field("http://127.0.0.1")
+    port: int = Field(8000)
+
+    class Config:
+        env_prefix = "SERVICE_"
 
 
 class TestSettings(BaseSettings):
-    es_host: str = Field("http://127.0.0.1:9201", env="ELASTIC_HOST")
-    es_index: str = Field("movies", env="ELASTIC_INDEX")
-    es_id_field: str = Field("wtf", env="ELASTIC_ID_FIELD")
-    es_index_mapping: dict = Field(movie_index_config, env="ELASTIC_INDEX_MAPPING")
-
-    redis_host: str = Field("http://127.0.0.1:6380", env="REDIS_HOST")
-    service_url: str = Field("http://127.0.0.1:8000", env="SERVICE_URL")
+    es: ElasticSettings = ElasticSettings(...)
+    redis: RedisSettings = RedisSettings()
+    pg: PGSettings = PGSettings()
+    service: ServiceSettings = ServiceSettings()
 
 
 test_settings = TestSettings()
