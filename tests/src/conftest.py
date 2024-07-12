@@ -4,7 +4,7 @@ import httpx
 import pytest_asyncio
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
-from utils import get_index_config_by_name
+from testdata import get_index_config_by_name
 
 from settings import ESIndex, test_settings
 
@@ -21,6 +21,20 @@ async def es_client():
     es_client = AsyncElasticsearch(hosts=test_settings.es.url, verify_certs=False)
     yield es_client
     await es_client.close()
+
+
+@pytest_asyncio.fixture()
+def es_bulk_query():
+    async def inner(index: ESIndex, data: list[dict]) -> list[dict]:
+        bulk_query: list[dict] = []
+        for row in data:
+            data = {"_index": index, "_id": row["id"]}
+            data.update({"_source": row})
+            bulk_query.append(data)
+
+        return bulk_query
+
+    return inner
 
 
 @pytest_asyncio.fixture()
