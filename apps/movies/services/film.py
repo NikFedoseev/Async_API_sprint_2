@@ -3,10 +3,11 @@ from typing import Literal
 from uuid import UUID
 
 from cache import Cache, cached_method
-from models import Film
-from services.deps import ElasticSearchFilmStorage, ElasticSearchGenreStorage, RedisCache
 from storages.film import FilmStorage
 from storages.genre import GenreStorage
+
+from models import Film
+from services.deps import ElasticSearchFilmStorage, ElasticSearchGenreStorage, RedisCache
 
 
 class FilmService:

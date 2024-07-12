@@ -1,9 +1,10 @@
 import abc
 from typing import Annotated, Any
 
-from db.elastic import get_elastic
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
+
+from db.elastic import get_elastic
 from models.person import Person
 
 

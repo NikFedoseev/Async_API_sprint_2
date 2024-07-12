@@ -1,7 +1,8 @@
-import time
 import uuid
 
 import pytest
+
+from tests.settings import ESIndex
 
 
 @pytest.mark.parametrize(
@@ -44,10 +45,10 @@ async def test_search(es_write_data, make_get_request, query_data, expected_answ
         bulk_query.append(data)
 
     # 2. Загружаем данные в ES
-    await es_write_data(bulk_query)
+    await es_write_data(ESIndex.movies, bulk_query)
 
     # 3. Запрашиваем данные из ES по API
-    time.sleep(1)  # сам по себе тест моргающий, надо бы какой нибудь tenacity, но пока так
+    # time.sleep(1)  # сам по себе тест моргающий, надо бы какой нибудь tenacity, но пока так
     response = await make_get_request("/api/v1/films/search", query_data)
 
     # 4. Проверяем ответ

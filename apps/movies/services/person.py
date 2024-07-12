@@ -2,10 +2,11 @@ from functools import lru_cache
 from uuid import UUID
 
 from cache import Cache, cached_method
-from models import Person, PersonFilm
-from services.deps import ElasticPersonFilmStorage, ElasticSearchFilmStorage, RedisCache
 from storages.film import FilmStorage
 from storages.person import PersonStorage
+
+from models import Person, PersonFilm
+from services.deps import ElasticPersonFilmStorage, ElasticSearchFilmStorage, RedisCache
 
 
 class PersonService:
@@ -41,7 +42,7 @@ class PersonService:
         if not person:
             return []
 
-        return person.films[(page_number - 1) * page_size: page_number * page_size]
+        return person.films[(page_number - 1) * page_size : page_number * page_size]
 
 
 @lru_cache(maxsize=1)
