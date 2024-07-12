@@ -80,3 +80,16 @@ async def test_search_current_page_size(
 
     assert response.status_code == expected_answer.get("status")
     assert len(response.json()) == expected_answer.get("length")
+
+
+@pytest.mark.asyncio()
+async def test_search_with_cache(
+    es_write_data, es_bulk_query, make_get_request, query_data, expected_answer
+):
+    bulk_query = await es_bulk_query(index=ESIndex.movies, data=[])
+    await es_write_data(bulk_query)
+
+    response = await make_get_request("/api/v1/films/search", query_data)
+
+    assert response.status_code == expected_answer.get("status")
+    assert len(response.json()) == expected_answer.get("length")

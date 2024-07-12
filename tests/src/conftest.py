@@ -41,7 +41,7 @@ def es_bulk_query():
 
 @pytest_asyncio.fixture()
 def es_write_data(es_client):
-    async def inner(data: list[dict]) -> None:
+    async def inner(data: list) -> None:
         if await es_client.indices.exists(index=ESIndex.movies):
             await es_client.indices.delete(index=ESIndex.movies)
         await es_client.indices.create(index=ESIndex.movies, **get_index_config_by_name(ESIndex.movies))
@@ -83,3 +83,8 @@ async def redis_client():
 @pytest_asyncio.fixture()
 def clear_redis(redis_client: redis.Redis):
     redis_client.flushall()
+
+
+@pytest_asyncio.fixture()
+def add_cache_to_redis(redis_client: redis.Redis):
+    redis_client.set("test_key", "test_value")
