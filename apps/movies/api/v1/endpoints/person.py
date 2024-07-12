@@ -21,6 +21,11 @@ async def search(
     Поиск персон по имени, роли и названию фильма
     """
 
+    if not (name or role or film_title):
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST, detail="query should contain at least one of filters: name, role, film_title"
+        )
+
     return await person_service.search(pagination.page_size, pagination.page_number, name, role, film_title)
 
 

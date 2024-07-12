@@ -68,6 +68,6 @@ def redis_client():
 
 @pytest_asyncio.fixture()
 def clear_cache(redis_client):
-    yield
     redis_client.flushdb()
+    yield
 

@@ -122,6 +122,43 @@ from utils.helpers import assert_have_json
             ]
         }
     ],
+    [
+        {
+            ESIndex.persons.value: [
+                person_mock({
+                    'full_name': 'Harrison Ford',
+                }),
+                person_mock({
+                    'full_name': 'Chuck Norris',
+                }),
+            ],
+        },
+        {
+            'film_title': 'Star',
+            'page_number': -1
+        },
+        {
+            'status': 422,
+            'data': {'detail': [{'type': 'greater_than_equal', 'loc': ['query', 'page_number'], 'msg': 'Input should be greater than or equal to 1', 'input': '-1', 'ctx': {'ge': 1}}]}
+        }
+    ],
+    [
+        {
+            ESIndex.persons.value: [
+                person_mock({
+                    'full_name': 'Harrison Ford',
+                }),
+                person_mock({
+                    'full_name': 'Chuck Norris',
+                }),
+            ],
+        },
+        {},
+        {
+            'status': 400,
+            'data': {'detail': 'query should contain at least one of filters: name, role, film_title'}
+        }
+    ],
 ])
 @pytest.mark.asyncio()
 async def test__search_persons(
@@ -178,7 +215,30 @@ async def test__search_persons(
             'status': 404,
             'data': {'detail': 'Person not found'},
         }
-    ]
+    ],
+    [
+        {
+            ESIndex.persons.value: [
+                person_mock({'id': 'e52aada7-4377-4f08-a21a-033ce3f9f8ad'}),
+                person_mock({'id': 'a6bbdf6c-8ea6-4978-82c5-2f7ad89046c7'}),
+            ],
+        },
+        '123',
+        {
+            'status': 422,
+            'data': {
+                'detail': [
+                    {
+                        'type': 'uuid_parsing',
+                        'loc': ['path', 'person_id'],
+                        'msg': 'Input should be a valid UUID, invalid length: expected length 32 for simple format, found 3',
+                        'input': '123',
+                        'ctx': {'error': 'invalid length: expected length 32 for simple format, found 3'}
+                    }
+                ]
+            }
+        }
+    ],
 ])
 @pytest.mark.asyncio()
 async def test__get_person_details(
@@ -210,7 +270,7 @@ async def test__get_person_details(
 
 
 @pytest.mark.parametrize('preload_data, person_id, expected_answer', [
-     [
+    [
         {
             ESIndex.persons.value: [
                 person_mock({
@@ -250,7 +310,36 @@ async def test__get_person_details(
             'status': 200,
             'data': [],
         }
-    ]
+    ],
+     [
+        {
+            ESIndex.persons.value: [
+                person_mock({
+                    'id': 'e52aada7-4377-4f08-a21a-033ce3f9f8ad',
+                    'films': [
+                        person_film_mock({'title': 'Interstellar'}),
+                        person_film_mock({'title': 'Fight Club'}),
+                    ]
+                }),
+                person_mock({'id': 'a6bbdf6c-8ea6-4978-82c5-2f7ad89046c7'}),
+            ],
+        },
+        '123',
+        {
+            'status': 422,
+            'data': {
+                'detail': [
+                    {
+                        'type': 'uuid_parsing',
+                        'loc': ['path', 'person_id'],
+                        'msg': 'Input should be a valid UUID, invalid length: expected length 32 for simple format, found 3',
+                        'input': '123',
+                        'ctx': {'error': 'invalid length: expected length 32 for simple format, found 3'}
+                    }
+                ]
+            }
+        }
+    ],
 ])
 @pytest.mark.asyncio()
 async def test__get_person_films(

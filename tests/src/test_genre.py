@@ -42,6 +42,31 @@ from utils.helpers import assert_have_json
             'data': {'detail': 'Genre not found'}
         }
     ],
+    [
+        {
+            ESIndex.genres.value: [
+                genre_mock({
+                    'id': '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
+                    'name': 'Fantasy',
+                }),
+            ],
+        },
+       '123',
+        {
+            'status': 422,
+            'data': {
+                'detail': [
+                    {
+                        'type': 'uuid_parsing',
+                        'loc': ['path', 'genre_id'],
+                        'msg': 'Input should be a valid UUID, invalid length: expected length 32 for simple format, found 3',
+                        'input': '123',
+                        'ctx': {'error': 'invalid length: expected length 32 for simple format, found 3'}
+                    }
+                ]
+            }
+        }
+    ],
 ])
 @pytest.mark.asyncio()
 async def test__get_genre_by_id(
