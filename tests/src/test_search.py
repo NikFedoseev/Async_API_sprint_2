@@ -13,7 +13,7 @@ from tests.settings import ESIndex
     ],
 )
 @pytest.mark.asyncio()
-async def test_search(es_write_data, make_get_request, query_data, expected_answer):
+async def test_search(clear_cache, es_write_data, make_get_request, query_data, expected_answer):
     # 1. Генерируем данные для ES
     es_data = [
         {

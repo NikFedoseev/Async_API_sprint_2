@@ -125,6 +125,7 @@ from utils.helpers import assert_have_json
 ])
 @pytest.mark.asyncio()
 async def test__search_persons(
+    clear_cache,
     es_write_data,
     make_get_request,
     preload_data,
@@ -181,6 +182,7 @@ async def test__search_persons(
 ])
 @pytest.mark.asyncio()
 async def test__get_person_details(
+    clear_cache,
     es_write_data,
     make_get_request,
     preload_data,
@@ -252,6 +254,7 @@ async def test__get_person_details(
 ])
 @pytest.mark.asyncio()
 async def test__get_person_films(
+    clear_cache,
     es_write_data,
     make_get_request,
     preload_data,
