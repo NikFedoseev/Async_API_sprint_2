@@ -1,6 +1,13 @@
 CODE ?= ./apps
+VENV ?= .venv
 
 .PHONY: up down local lint
+
+init:
+	python3.12 -m venv $(VENV)
+	$(VENV)/bin/python -m pip install --upgrade pip
+	$(VENV)/bin/python -m pip install poetry
+	$(VENV)/bin/poetry install
 
 up:
 	docker compose up --build
@@ -14,7 +21,7 @@ local:
 plint:
 	ruff format $(CODE)
 	ruff check $(CODE) --fix --show-fixes
-	MYPYPATH=./apps/movies mypy --explicit-package-bases $(CODE)
+	MYPYPATH=./apps/movies mypy --ignore-missing-imports --explicit-package-bases $(CODE)
 
 
 .DEFAULT_GOAL := up

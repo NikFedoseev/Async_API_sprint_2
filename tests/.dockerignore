@@ -1,0 +1,33 @@
+*.pyc
+__pycache__
+.git
+.env
+.venv
+.mypy_cache
+.pytest_cache
+**/__pycache__
+**/*.pyc
+allure-results
+
+.# IDE
+.idea
+.ropeproject
+**/.ropeproject
+**/*.swp
+.vscode/
+
+# Docker
+docker-compose.yml
+Dockerfile
+*.Dockerfile
+.docker
+.dockerignore
+docker_compose_temp/*
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Project
+/dbs
