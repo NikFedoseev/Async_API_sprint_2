@@ -1,4 +1,9 @@
+import random
 import uuid
+
+import faker
+
+fake = faker.Faker()
 
 es_data_the_star_60 = [
     {
@@ -21,4 +26,27 @@ es_data_the_star_60 = [
         "directors": [],
     }
     for _ in range(60)
+]
+
+es_data_fake_10 = [
+    {
+        "id": str(uuid.uuid4()),
+        "imdb_rating": round(random.uniform(0, 10), 1),
+        "title": "Doctor Who",
+        "description": fake.text(100),
+        "genres": ["Sci-Fi"],
+        "directors_names": [fake.first_name()],
+        "actors_names": [fake.first_name(), fake.first_name()],
+        "writers_names": [fake.first_name(), fake.first_name()],
+        "actors": [
+            {"id": str(uuid.uuid4()), "name": fake.name()},
+            {"id": str(uuid.uuid4()), "name": fake.name()},
+        ],
+        "writers": [
+            {"id": str(uuid.uuid4()), "name": fake.name()},
+            {"id": str(uuid.uuid4()), "name": fake.name()},
+        ],
+        "directors": [],
+    }
+    for _ in range(10)
 ]

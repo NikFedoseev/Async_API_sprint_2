@@ -1,5 +1,5 @@
 import asyncio
-
+import time
 import httpx
 import pytest_asyncio
 from elasticsearch import AsyncElasticsearch
@@ -45,6 +45,7 @@ def es_write_data(es_client):
         await es_client.indices.create(index=ESIndex.movies, **get_index_config_by_name(ESIndex.movies))
 
         updated, errors = await async_bulk(client=es_client, actions=data)
+        time.sleep(2)   # todo костыль, пока хз как порешать ожидание записи в Elasticsearch
 
         if errors:
             raise Exception("Ошибка записи данных в Elasticsearch")
