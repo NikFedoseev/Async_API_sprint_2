@@ -1,7 +1,9 @@
 import asyncio
 import time
+
 import httpx
 import pytest_asyncio
+import redis.asyncio as redis
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
 from testdata import get_index_config_by_name
@@ -45,7 +47,7 @@ def es_write_data(es_client):
         await es_client.indices.create(index=ESIndex.movies, **get_index_config_by_name(ESIndex.movies))
 
         updated, errors = await async_bulk(client=es_client, actions=data)
-        time.sleep(2)   # todo костыль, пока хз как порешать ожидание записи в Elasticsearch
+        time.sleep(0.5)
 
         if errors:
             raise Exception("Ошибка записи данных в Elasticsearch")
@@ -68,3 +70,16 @@ def make_get_request(async_client: httpx.AsyncClient):
         return response
 
     return inner
+
+
+@pytest_asyncio.fixture()
+async def redis_client():
+    async with redis.Redis(
+        host=test_settings.redis.host, port=test_settings.redis.port, db=test_settings.redis.db
+    ) as client:
+        yield client
+
+
+@pytest_asyncio.fixture()
+def clear_redis(redis_client: redis.Redis):
+    redis_client.flushall()

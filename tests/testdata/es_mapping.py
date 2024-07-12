@@ -12,7 +12,7 @@ def get_index_config_by_name(index_name: ESIndex) -> dict | None:  # type: ignor
 
 movie_index_config = {
     "settings": {
-        "refresh_interval": "1s",
+        "refresh_interval": "1ms",
         "analysis": {
             "filter": {
                 "english_stop": {"type": "stop", "stopwords": "_english_"},
@@ -68,7 +68,7 @@ movie_index_config = {
 
 genre_index_config = {
     "settings": {
-        "refresh_interval": "1s",
+        "refresh_interval": "1ms",
         "analysis": {
             "filter": {
                 "english_stop": {"type": "stop", "stopwords": "_english_"},
@@ -122,7 +122,7 @@ genre_index_config = {
 
 person_index_config = {
     "settings": {
-        "refresh_interval": "1s",
+        "refresh_interval": "1ms",
         "analysis": {
             "filter": {
                 "english_stop": {"type": "stop", "stopwords": "_english_"},
