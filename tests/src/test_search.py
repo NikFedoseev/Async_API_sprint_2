@@ -14,7 +14,7 @@ from settings import ESIndex
 @pytest.mark.asyncio()
 async def test_search(es_write_data, es_bulk_query, make_get_request, query_data, expected_answer):
     bulk_query = await es_bulk_query(index=ESIndex.movies, data=es_data_the_star_60)
-    await es_write_data(bulk_query)
+    await es_write_data(ESIndex.movies, bulk_query)
 
     response = await make_get_request("/api/v1/films/search", query_data)
 
@@ -42,10 +42,10 @@ async def test_search(es_write_data, es_bulk_query, make_get_request, query_data
 @pytest.mark.asyncio()
 async def test_search_incorrect_pagination(es_write_data, es_bulk_query, make_get_request, query_data, expected_answer):
     bulk_query = await es_bulk_query(index=ESIndex.movies, data=es_data_the_star_60)
-    await es_write_data(bulk_query)
+    # await es_write_data(ESIndex.movies, bulk_query)
+    await es_write_data(ESIndex.movies, bulk_query)
 
     response = await make_get_request("/api/v1/films/search", query_data)
-
     response_msg = response.json().get("detail")[0].get("msg")
 
     assert response.status_code == expected_answer.get("status")
@@ -70,11 +70,9 @@ async def test_search_incorrect_pagination(es_write_data, es_bulk_query, make_ge
     ],
 )
 @pytest.mark.asyncio()
-async def test_search_current_page_size(
-    es_write_data, es_bulk_query, make_get_request, query_data, expected_answer, clear_redis
-):
+async def test_search_current_page_size(es_write_data, es_bulk_query, make_get_request, query_data, expected_answer):
     bulk_query = await es_bulk_query(index=ESIndex.movies, data=es_data_fake_10 + es_data_the_star_60)
-    await es_write_data(bulk_query)
+    await es_write_data(ESIndex.movies, bulk_query)
 
     response = await make_get_request("/api/v1/films/search", query_data)
 
@@ -86,7 +84,7 @@ async def test_search_current_page_size(
 @pytest.mark.asyncio()
 async def test_search_with_cache(es_write_data, es_bulk_query, make_get_request, query_data, expected_answer):
     bulk_query = await es_bulk_query(index=ESIndex.movies, data=[])
-    await es_write_data(bulk_query)
+    await es_write_data(ESIndex.movies, bulk_query)
 
     response = await make_get_request("/api/v1/films/search", query_data)
 
