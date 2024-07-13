@@ -71,3 +71,19 @@ def clear_cache(redis_client):
     redis_client.flushdb()
     yield
 
+
+@pytest_asyncio.fixture()
+async def fill_elastic_indices(es_write_data):
+    async def inner(preload_data: dict[str, list[dict]]) -> None:
+        for name, data in preload_data.items():
+            data_to_load = [
+                {
+                    '_index': name,
+                    '_id': row['id'],
+                    '_source': row
+                } 
+                for row in data
+            ]
+            await es_write_data(name, data_to_load)
+        
+    return inner
