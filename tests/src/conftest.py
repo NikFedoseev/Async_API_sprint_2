@@ -4,6 +4,7 @@ import httpx
 import pytest_asyncio
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
+from redis import Redis
 from utils import get_index_config_by_name
 
 from settings import ESIndex, test_settings
@@ -24,17 +25,20 @@ async def es_client():
 
 
 @pytest_asyncio.fixture()
-def es_write_data(es_client):
-    async def inner(data: list[dict]) -> None:
-        if await es_client.indices.exists(index=ESIndex.movies):
-            await es_client.indices.delete(index=ESIndex.movies)
-        await es_client.indices.create(index=ESIndex.movies, **get_index_config_by_name(ESIndex.movies))
+async def es_write_data(es_client):
+    async def inner(index_name: ESIndex, data: list[dict]) -> None:
+        if await es_client.indices.exists(index=index_name):
+            await es_client.indices.delete(index=index_name)
 
-        updated, errors = await async_bulk(client=es_client, actions=data)
+        await es_client.indices.create(index=index_name, **get_index_config_by_name(index_name))
+
+        _, errors = await async_bulk(client=es_client, actions=data)
+       
+        await es_client.indices.refresh(index=index_name)
 
         if errors:
             raise Exception("Ошибка записи данных в Elasticsearch")
-
+        
     return inner
 
 
@@ -46,10 +50,24 @@ async def async_client():
 
 @pytest_asyncio.fixture()
 def make_get_request(async_client: httpx.AsyncClient):
-    async def inner(method: str, query_data: dict) -> httpx.Response:
+    async def inner(method: str, query_data: dict | None = None) -> httpx.Response:
         url = test_settings.service.url + method
         response = await async_client.get(url, params=query_data)
 
         return response
 
     return inner
+
+
+@pytest_asyncio.fixture(scope="session")
+def redis_client():
+    redis = Redis.from_url(test_settings.redis.url)
+    yield redis
+    redis.close()
+
+
+@pytest_asyncio.fixture()
+def clear_cache(redis_client):
+    redis_client.flushdb()
+    yield
+
