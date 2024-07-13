@@ -7,6 +7,8 @@ import redis.asyncio as redis
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
 from testdata import get_index_config_by_name
+from redis import Redis
+from utils import get_index_config_by_name
 
 from settings import ESIndex, test_settings
 
@@ -40,14 +42,16 @@ def es_bulk_query():
 
 
 @pytest_asyncio.fixture()
-def es_write_data(es_client):
-    async def inner(data: list) -> None:
-        if await es_client.indices.exists(index=ESIndex.movies):
-            await es_client.indices.delete(index=ESIndex.movies)
-        await es_client.indices.create(index=ESIndex.movies, **get_index_config_by_name(ESIndex.movies))
+async def es_write_data(es_client):
+    async def inner(index_name: ESIndex, data: list[dict]) -> None:
+        if await es_client.indices.exists(index=index_name):
+            await es_client.indices.delete(index=index_name)
 
-        updated, errors = await async_bulk(client=es_client, actions=data)
-        time.sleep(0.5)
+        await es_client.indices.create(index=index_name, **get_index_config_by_name(index_name))
+
+        _, errors = await async_bulk(client=es_client, actions=data)
+
+        await es_client.indices.refresh(index=index_name)
 
         if errors:
             raise Exception("Ошибка записи данных в Elasticsearch")
@@ -63,7 +67,7 @@ async def async_client():
 
 @pytest_asyncio.fixture()
 def make_get_request(async_client: httpx.AsyncClient):
-    async def inner(method: str, query_data: dict) -> httpx.Response:
+    async def inner(method: str, query_data: dict | None = None) -> httpx.Response:
         url = test_settings.service.url + method
         response = await async_client.get(url, params=query_data)
 
@@ -72,19 +76,15 @@ def make_get_request(async_client: httpx.AsyncClient):
     return inner
 
 
-@pytest_asyncio.fixture()
-async def redis_client():
-    async with redis.Redis(
-        host=test_settings.redis.host, port=test_settings.redis.port, db=test_settings.redis.db
-    ) as client:
-        yield client
+@pytest_asyncio.fixture(scope="session")
+def redis_client():
+    redis = Redis.from_url(test_settings.redis.url)
+    yield redis
+    redis.close()
 
 
 @pytest_asyncio.fixture()
-def clear_redis(redis_client: redis.Redis):
-    redis_client.flushall()
+def clear_cache(redis_client):
+    redis_client.flushdb()
+    yield
 
-
-@pytest_asyncio.fixture()
-def add_cache_to_redis(redis_client: redis.Redis):
-    redis_client.set("test_key", "test_value")

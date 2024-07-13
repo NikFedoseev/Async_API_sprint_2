@@ -1,12 +1,13 @@
 import abc
-import orjson
 import pickle
 from collections.abc import Callable
 from typing import Annotated, Any
 
-from db.redis import get_redis
+import orjson
 from fastapi import Depends
 from redis.asyncio import Redis
+
+from db.redis import get_redis
 
 
 class Cache(abc.ABC):

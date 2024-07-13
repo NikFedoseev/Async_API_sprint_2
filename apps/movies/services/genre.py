@@ -2,9 +2,10 @@ from functools import lru_cache
 from uuid import UUID
 
 from cache import Cache, cached_method
+from storages.genre import GenreStorage
+
 from models import Genre
 from services.deps import ElasticSearchGenreStorage, RedisCache
-from storages.genre import GenreStorage
 
 
 class GenreService:
