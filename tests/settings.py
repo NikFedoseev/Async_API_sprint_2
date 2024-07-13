@@ -24,7 +24,7 @@ class ElasticSettings(MyBaseSettings):
 
 
 class RedisSettings(MyBaseSettings):
-    host: str = Field("redis://127.0.0.1")
+    host: str = Field("127.0.0.1")
     port: int = Field(6380)
     db: int = Field(0)
 
