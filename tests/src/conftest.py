@@ -5,7 +5,7 @@ import pytest_asyncio
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
 from redis import Redis
-from utils import get_index_config_by_name
+from testdata.es_mapping import get_index_config_by_name
 
 from settings import ESIndex, test_settings
 

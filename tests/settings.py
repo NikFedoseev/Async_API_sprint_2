@@ -13,26 +13,30 @@ class ESIndex(StrEnum):
 class MyBaseSettings(BaseSettings):
     @property
     def url(self) -> str:
-        return f"{self.host}:{self.port}"
+        return f"http://{self.host}:{self.port}"
 
 
 class ElasticSettings(MyBaseSettings):
-    host: str = Field("http://127.0.0.1")
+    host: str = Field("127.0.0.1")
     port: int = Field(9201)
 
     model_config = SettingsConfigDict(env_prefix="ELASTIC_")
 
 
 class RedisSettings(MyBaseSettings):
-    host: str = Field("redis://127.0.0.1")
+    host: str = Field("127.0.0.1")
     port: int = Field(6380)
     db: int = Field(0)
+
+    @property
+    def url(self) -> str:
+        return f"redis://{self.host}:{self.port}"
 
     model_config = SettingsConfigDict(env_prefix="REDIS_")
 
 
 class ServiceSettings(MyBaseSettings):
-    host: str = Field("http://127.0.0.1")
+    host: str = Field("127.0.0.1")
     port: int = Field(8000)
 
     model_config = SettingsConfigDict(env_prefix="SERVICE_")
