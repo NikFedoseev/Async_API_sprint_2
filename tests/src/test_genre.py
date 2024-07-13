@@ -71,22 +71,13 @@ from utils.helpers import assert_have_json
 @pytest.mark.asyncio()
 async def test__get_genre_by_id(
     clear_cache,
-    es_write_data,
+    fill_elastic_indices,
     make_get_request,
     preload_data,
     genre_id,
     expected_answer
 ):
-    for name, data in preload_data.items():
-        data_to_load = [
-            {
-                '_index': name,
-                '_id': row['id'],
-                '_source': row
-            } 
-            for row in data
-        ]
-        await es_write_data(name, data_to_load)
+    await fill_elastic_indices(preload_data)
     
     response = await make_get_request(f"/api/v1/genres/{genre_id}")
     assert response.status_code == expected_answer["status"]
@@ -136,22 +127,13 @@ async def test__get_genre_by_id(
 ])
 @pytest.mark.asyncio()
 async def test__get_genre_by_id_cache(
-    es_write_data,
+    fill_elastic_indices,
     make_get_request,
     preload_data,
     genre_id,
     expected_answer
 ):
-    for name, data in preload_data.items():
-        data_to_load = [
-            {
-                '_index': name,
-                '_id': row['id'],
-                '_source': row
-            } 
-            for row in data
-        ]
-        await es_write_data(name, data_to_load)
+    await fill_elastic_indices(preload_data)
     
     response = await make_get_request(f"/api/v1/genres/{genre_id}")
     assert response.status_code == expected_answer["status"]
@@ -203,21 +185,12 @@ async def test__get_genre_by_id_cache(
 @pytest.mark.asyncio()
 async def test__get_genres(
     clear_cache,
-    es_write_data,
+    fill_elastic_indices,
     make_get_request,
     preload_data,
     expected_answer
 ):
-    for name, data in preload_data.items():
-        data_to_load = [
-            {
-                '_index': name,
-                '_id': row['id'],
-                '_source': row
-            } 
-            for row in data
-        ]
-        await es_write_data(name, data_to_load)
+    await fill_elastic_indices(preload_data)
     
     response = await make_get_request("/api/v1/genres/")
     assert response.status_code == expected_answer["status"]
@@ -277,21 +250,12 @@ async def test__get_genres(
 ])
 @pytest.mark.asyncio()
 async def test__get_genres_cache(
-    es_write_data,
+    fill_elastic_indices,
     make_get_request,
     preload_data,
     expected_answer
 ):
-    for name, data in preload_data.items():
-        data_to_load = [
-            {
-                '_index': name,
-                '_id': row['id'],
-                '_source': row
-            } 
-            for row in data
-        ]
-        await es_write_data(name, data_to_load)
+    await fill_elastic_indices(preload_data)
     
     response = await make_get_request("/api/v1/genres/")
     assert response.status_code == expected_answer["status"]
