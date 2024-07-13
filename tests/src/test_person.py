@@ -273,6 +273,69 @@ async def test__get_person_details(
     [
         {
             ESIndex.persons.value: [
+                person_mock({'id': 'e52aada7-4377-4f08-a21a-033ce3f9f8ad'}),
+                person_mock({'id': 'a6bbdf6c-8ea6-4978-82c5-2f7ad89046c7'}),
+            ],
+        },
+        'e52aada7-4377-4f08-a21a-033ce3f9f8ad',
+        {
+            'status': 200,
+            'data': response_person_mock({'id': 'e52aada7-4377-4f08-a21a-033ce3f9f8ad'}),
+        }
+    ],
+    [
+        {
+            ESIndex.persons.value: [],
+        },
+        'e52aada7-4377-4f08-a21a-033ce3f9f8ad',
+        {
+            'status': 200,
+            'data': response_person_mock({'id': 'e52aada7-4377-4f08-a21a-033ce3f9f8ad'}),
+        }
+    ],
+    [
+        {
+            ESIndex.persons.value: [],
+        },
+        '632dbe62-b534-44a5-9014-f289cf65bb4a',
+        {
+            'status': 404,
+            'data': {'detail': 'Person not found'},
+        }
+    ],
+])
+@pytest.mark.asyncio()
+async def test__get_person_details_cache(
+    es_write_data,
+    make_get_request,
+    preload_data,
+    person_id,
+    expected_answer
+):
+    for name, data in preload_data.items():
+        data_to_load = [
+            {
+                '_index': name,
+                '_id': row['id'],
+                '_source': row
+            } 
+            for row in data
+        ]
+        await es_write_data(name, data_to_load)
+    
+    response = await make_get_request(f"/api/v1/persons/{person_id}")
+    assert response.status_code == expected_answer["status"]
+    assert_have_json(
+        should_be=expected_answer['data'],
+        other=response.json(),
+        exclude_ids=True
+    )
+
+
+@pytest.mark.parametrize('preload_data, person_id, expected_answer', [
+    [
+        {
+            ESIndex.persons.value: [
                 person_mock({
                     'id': 'e52aada7-4377-4f08-a21a-033ce3f9f8ad',
                     'films': [
@@ -344,6 +407,71 @@ async def test__get_person_details(
 @pytest.mark.asyncio()
 async def test__get_person_films(
     clear_cache,
+    es_write_data,
+    make_get_request,
+    preload_data,
+    person_id,
+    expected_answer
+):
+    for name, data in preload_data.items():
+        data_to_load = [
+            {
+                '_index': name,
+                '_id': row['id'],
+                '_source': row
+            } 
+            for row in data
+        ]
+        await es_write_data(name, data_to_load)
+    
+    response = await make_get_request(f"/api/v1/persons/{person_id}/films")
+    assert response.status_code == expected_answer["status"]
+    assert_have_json(
+        should_be=expected_answer['data'],
+        other=response.json(),
+        exclude_ids=True
+    )
+
+
+@pytest.mark.parametrize('preload_data, person_id, expected_answer', [
+    [
+        {
+            ESIndex.persons.value: [
+                person_mock({
+                    'id': 'e52aada7-4377-4f08-a21a-033ce3f9f8ad',
+                    'films': [
+                        person_film_mock({'title': 'Interstellar'}),
+                        person_film_mock({'title': 'Fight Club'}),
+                    ]
+                }),
+                person_mock({'id': 'a6bbdf6c-8ea6-4978-82c5-2f7ad89046c7'}),
+            ],
+        },
+        'e52aada7-4377-4f08-a21a-033ce3f9f8ad',
+        {
+            'status': 200,
+            'data': [
+                response_person_film_mock({'title': 'Interstellar'}),
+                response_person_film_mock({'title': 'Fight Club'}),
+            ],
+        }
+    ],
+    [
+        {
+            ESIndex.persons.value: [],
+        },
+        'e52aada7-4377-4f08-a21a-033ce3f9f8ad',
+        {
+            'status': 200,
+            'data': [
+                response_person_film_mock({'title': 'Interstellar'}),
+                response_person_film_mock({'title': 'Fight Club'}),
+            ],
+        }
+    ],
+])
+@pytest.mark.asyncio()
+async def test__get_person_films_cache(
     es_write_data,
     make_get_request,
     preload_data,
