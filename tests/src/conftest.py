@@ -1,14 +1,11 @@
 import asyncio
-import time
 
 import httpx
 import pytest_asyncio
-import redis.asyncio as redis
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
-from testdata import get_index_config_by_name
 from redis import Redis
-from utils import get_index_config_by_name
+from testdata import get_index_config_by_name
 
 from settings import ESIndex, test_settings
 
@@ -87,4 +84,3 @@ def redis_client():
 def clear_cache(redis_client):
     redis_client.flushdb()
     yield
-

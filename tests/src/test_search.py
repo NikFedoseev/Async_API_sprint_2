@@ -82,11 +82,9 @@ async def test_search_current_page_size(
     assert len(response.json()) == expected_answer.get("length")
 
 
-@pytest.mark.skip
+@pytest.mark.skip()
 @pytest.mark.asyncio()
-async def test_search_with_cache(
-    es_write_data, es_bulk_query, make_get_request, query_data, expected_answer
-):
+async def test_search_with_cache(es_write_data, es_bulk_query, make_get_request, query_data, expected_answer):
     bulk_query = await es_bulk_query(index=ESIndex.movies, data=[])
     await es_write_data(bulk_query)
 
