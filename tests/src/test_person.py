@@ -1,4 +1,5 @@
 import pytest
+from http import HTTPStatus
 from settings import ESIndex
 from testdata.person_mocks import person_mock, person_film_mock, response_person_mock, response_person_film_mock
 from utils.helpers import assert_have_json
@@ -19,7 +20,7 @@ from utils.helpers import assert_have_json
             'name': 'Harrison Ford'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_person_mock({
                     'full_name': 'Harrison Ford',
@@ -42,7 +43,7 @@ from utils.helpers import assert_have_json
             'name': 'Robert De Niro'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': []
         }
     ],
@@ -71,7 +72,7 @@ from utils.helpers import assert_have_json
             'role': 'actor'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_person_mock({
                     'full_name': 'Harrison Ford',
@@ -109,7 +110,7 @@ from utils.helpers import assert_have_json
             'film_title': '9 Muses of Star Empire'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_person_mock({
                     'full_name': 'Harrison Ford',
@@ -138,7 +139,7 @@ from utils.helpers import assert_have_json
             'page_number': -1
         },
         {
-            'status': 422,
+            'status': HTTPStatus.UNPROCESSABLE_ENTITY,
             'data': {'detail': [{'type': 'greater_than_equal', 'loc': ['query', 'page_number'], 'msg': 'Input should be greater than or equal to 1', 'input': '-1', 'ctx': {'ge': 1}}]}
         }
     ],
@@ -155,7 +156,7 @@ from utils.helpers import assert_have_json
         },
         {},
         {
-            'status': 400,
+            'status': HTTPStatus.BAD_REQUEST,
             'data': {'detail': 'query should contain at least one of filters: name, role, film_title'}
         }
     ],
@@ -190,7 +191,7 @@ async def test__search_persons(
         },
         'e52aada7-4377-4f08-a21a-033ce3f9f8ad',
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': response_person_mock({'id': 'e52aada7-4377-4f08-a21a-033ce3f9f8ad'}),
         }
     ],
@@ -203,7 +204,7 @@ async def test__search_persons(
         },
         'f3062f15-c2c0-488e-b2ef-7f79e5d9078d',
         {
-            'status': 404,
+            'status': HTTPStatus.NOT_FOUND,
             'data': {'detail': 'Person not found'},
         }
     ],
@@ -216,7 +217,7 @@ async def test__search_persons(
         },
         '123',
         {
-            'status': 422,
+            'status': HTTPStatus.UNPROCESSABLE_ENTITY,
             'data': {
                 'detail': [
                     {
@@ -261,7 +262,7 @@ async def test__get_person_details(
         },
         'e52aada7-4377-4f08-a21a-033ce3f9f8ad',
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': response_person_mock({'id': 'e52aada7-4377-4f08-a21a-033ce3f9f8ad'}),
         }
     ],
@@ -271,7 +272,7 @@ async def test__get_person_details(
         },
         'e52aada7-4377-4f08-a21a-033ce3f9f8ad',
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': response_person_mock({'id': 'e52aada7-4377-4f08-a21a-033ce3f9f8ad'}),
         }
     ],
@@ -281,7 +282,7 @@ async def test__get_person_details(
         },
         '632dbe62-b534-44a5-9014-f289cf65bb4a',
         {
-            'status': 404,
+            'status': HTTPStatus.NOT_FOUND,
             'data': {'detail': 'Person not found'},
         }
     ],
@@ -321,7 +322,7 @@ async def test__get_person_details_cache(
         },
         'e52aada7-4377-4f08-a21a-033ce3f9f8ad',
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_person_film_mock({'title': 'Interstellar'}),
                 response_person_film_mock({'title': 'Fight Club'}),
@@ -343,7 +344,7 @@ async def test__get_person_details_cache(
         },
         'f3062f15-c2c0-488e-b2ef-7f79e5d9078d',
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [],
         }
     ],
@@ -362,7 +363,7 @@ async def test__get_person_details_cache(
         },
         '123',
         {
-            'status': 422,
+            'status': HTTPStatus.UNPROCESSABLE_ENTITY,
             'data': {
                 'detail': [
                     {
@@ -413,7 +414,7 @@ async def test__get_person_films(
         },
         'e52aada7-4377-4f08-a21a-033ce3f9f8ad',
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_person_film_mock({'title': 'Interstellar'}),
                 response_person_film_mock({'title': 'Fight Club'}),
@@ -426,7 +427,7 @@ async def test__get_person_films(
         },
         'e52aada7-4377-4f08-a21a-033ce3f9f8ad',
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_person_film_mock({'title': 'Interstellar'}),
                 response_person_film_mock({'title': 'Fight Club'}),

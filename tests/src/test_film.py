@@ -1,4 +1,5 @@
 import pytest
+from http import HTTPStatus
 from settings import ESIndex
 from testdata.film_mocks import film_mock, response_film_mock, response_detailed_film_mock
 from testdata.genre_mocks import genre_mock
@@ -21,7 +22,7 @@ from utils.helpers import assert_have_json
         },
         '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': response_detailed_film_mock({
                 'id': '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
                 'title': 'Matrix',
@@ -43,7 +44,7 @@ from utils.helpers import assert_have_json
         },
         '123',
         {
-            'status': 422,
+            'status': HTTPStatus.UNPROCESSABLE_ENTITY,
             'data': {
                 'detail': [
                     {
@@ -72,7 +73,7 @@ from utils.helpers import assert_have_json
         },
         '8c0d6810-d1fd-40bd-b221-3006e6f21da5',
         {
-            'status': 404,
+            'status': HTTPStatus.NOT_FOUND,
             'data': {
                 'detail': 'Film not found'
             }
@@ -115,7 +116,7 @@ async def test__film_details(
         },
         '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': response_detailed_film_mock({
                 'id': '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
                 'title': 'Matrix',
@@ -128,7 +129,7 @@ async def test__film_details(
         },
         '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': response_detailed_film_mock({
                 'id': '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
                 'title': 'Matrix',
@@ -169,7 +170,7 @@ async def test__film_details_cache(
         },
         {},
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_film_mock({
                     'title': 'Matrix',
@@ -208,7 +209,7 @@ async def test__film_details_cache(
             'genre': '2f89e116-4827-4ff4-853c-b6e058f71e31'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_film_mock({
                     'title': 'Matrix',
@@ -249,7 +250,7 @@ async def test__film_details_cache(
             'page_number': 1,
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_film_mock({
                     'title': 'Matrix',
@@ -287,7 +288,7 @@ async def test__film_details_cache(
             'page_number': 0,
         },
         {
-            'status': 422,
+            'status': HTTPStatus.UNPROCESSABLE_ENTITY,
             'data': {
                 'detail': [
                     {
@@ -336,7 +337,7 @@ async def test__get_films(
         },
         {},
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_film_mock({
                     'title': 'Matrix',
@@ -353,7 +354,7 @@ async def test__get_films(
         },
         {},
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_film_mock({
                     'title': 'Matrix',
