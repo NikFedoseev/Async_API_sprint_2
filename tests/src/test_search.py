@@ -1,4 +1,5 @@
 import pytest
+from http import HTTPStatus
 from settings import ESIndex
 from testdata.person_mocks import person_mock, person_film_mock, response_person_mock
 from tests.testdata.film_mocks import film_mock, response_film_mock
@@ -20,7 +21,7 @@ from utils.helpers import assert_have_json
             'name': 'Harrison Ford'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_person_mock({
                     'full_name': 'Harrison Ford',
@@ -43,7 +44,7 @@ from utils.helpers import assert_have_json
             'name': 'Robert De Niro'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': []
         }
     ],
@@ -72,7 +73,7 @@ from utils.helpers import assert_have_json
             'role': 'actor'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_person_mock({
                     'full_name': 'Harrison Ford',
@@ -110,7 +111,7 @@ from utils.helpers import assert_have_json
             'film_title': '9 Muses of Star Empire'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_person_mock({
                     'full_name': 'Harrison Ford',
@@ -139,7 +140,7 @@ from utils.helpers import assert_have_json
             'page_number': -1
         },
         {
-            'status': 422,
+            'status': HTTPStatus.UNPROCESSABLE_ENTITY,
             'data': {'detail': [{'type': 'greater_than_equal', 'loc': ['query', 'page_number'], 'msg': 'Input should be greater than or equal to 1', 'input': '-1', 'ctx': {'ge': 1}}]}
         }
     ],
@@ -156,7 +157,7 @@ from utils.helpers import assert_have_json
         },
         {},
         {
-            'status': 400,
+            'status': HTTPStatus.BAD_REQUEST,
             'data': {'detail': 'query should contain at least one of filters: name, role, film_title'}
         }
     ],
@@ -186,7 +187,7 @@ from utils.helpers import assert_have_json
             'page_size': 1,
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_person_mock({
                     'full_name': 'Harrison Ford',
@@ -237,7 +238,7 @@ async def test__search_persons(
             'name': 'Harrison Ford'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_person_mock({
                     'full_name': 'Harrison Ford',
@@ -253,7 +254,7 @@ async def test__search_persons(
             'name': 'Harrison Ford'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_person_mock({
                     'full_name': 'Harrison Ford',
@@ -297,7 +298,7 @@ async def test__search_persons_cache(
             'title': 'Matrix'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_film_mock({
                     'title': 'Matrix',
@@ -320,7 +321,7 @@ async def test__search_persons_cache(
             'title': 'sdmfklmdsflk'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': []
         }
     ],
@@ -349,7 +350,7 @@ async def test__search_persons_cache(
             'page_size': 2,
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_film_mock({
                     'title': 'Star Wars: Episode IV - A New Hope',
@@ -375,7 +376,7 @@ async def test__search_persons_cache(
             'page_size': -1,
         },
         {
-            'status': 422,
+            'status': HTTPStatus.UNPROCESSABLE_ENTITY,
             'data': {
                 'detail': [
                     {
@@ -432,7 +433,7 @@ async def test__search_films(
             'title': 'Matrix'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_film_mock({
                     'title': 'Matrix',
@@ -448,7 +449,7 @@ async def test__search_films(
             'title': 'Matrix'
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_film_mock({
                     'title': 'Matrix',

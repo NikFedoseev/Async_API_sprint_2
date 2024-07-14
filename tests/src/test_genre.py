@@ -1,4 +1,5 @@
 import pytest
+from http import HTTPStatus
 from settings import ESIndex
 from testdata.genre_mocks import genre_mock, response_genre_mock
 from utils.helpers import assert_have_json
@@ -20,7 +21,7 @@ from utils.helpers import assert_have_json
         },
        '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': response_genre_mock({
                 'id': '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
                 'name': 'Adventure',
@@ -38,7 +39,7 @@ from utils.helpers import assert_have_json
         },
        'ae90bcce-aa4d-426c-8be4-b1b61b7f186a',
         {
-            'status': 404,
+            'status': HTTPStatus.NOT_FOUND,
             'data': {'detail': 'Genre not found'}
         }
     ],
@@ -53,7 +54,7 @@ from utils.helpers import assert_have_json
         },
        '123',
         {
-            'status': 422,
+            'status': HTTPStatus.UNPROCESSABLE_ENTITY,
             'data': {
                 'detail': [
                     {
@@ -104,7 +105,7 @@ async def test__get_genre_by_id(
         },
        '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': response_genre_mock({
                 'id': '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
                 'name': 'Adventure',
@@ -117,7 +118,7 @@ async def test__get_genre_by_id(
         },
        '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': response_genre_mock({
                 'id': '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
                 'name': 'Adventure',
@@ -159,7 +160,7 @@ async def test__get_genre_by_id_cache(
             ],
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_genre_mock({
                     'id': '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
@@ -177,7 +178,7 @@ async def test__get_genre_by_id_cache(
             ESIndex.genres.value: [],
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': []
         }
     ],
@@ -216,7 +217,7 @@ async def test__get_genres(
             ],
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_genre_mock({
                     'id': '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
@@ -234,7 +235,7 @@ async def test__get_genres(
             ESIndex.genres.value: [],
         },
         {
-            'status': 200,
+            'status': HTTPStatus.OK,
             'data': [
                 response_genre_mock({
                     'id': '3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff',
